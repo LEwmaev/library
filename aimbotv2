@@ -98,8 +98,7 @@ dwRunService.RenderStepped:Connect(function()
         closest_char:FindFirstChild("Humanoid").Health > 0 then
             if _G.Visible_Check and inlos(closest_char[_G.Aimbot_AimPart].Position, closest_char) or not _G.Visible_Check then
         	if table.find(whitelisted, targ.Name) == nil then
-		    TweenService:Create(cam, TweenInfo.new(_G.Smoothing, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(cam.CFrame.Position, closest_char[_G.Aimbot_AimPart].Position)}):Play()
-            	    --cam.CFrame = CFrame.new(cam.CFrame.Position, closest_char[_G.Aimbot_AimPart].Position)
+            	    cam.CFrame = CFrame.new(cam.CFrame.Position, closest_char[_G.Aimbot_AimPart].Position)
               	end
             end
         end
