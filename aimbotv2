@@ -2,6 +2,7 @@ local cam = workspace.CurrentCamera
 local plrs = game:GetService("Players")
 local plr = plrs.LocalPlayer
 local mouse = plr:GetMouse()
+local TweenService = game:GetService("TweenService")
 local dwRunService = game:GetService("RunService")
 local dwUIS = game:GetService("UserInputService")
 
@@ -13,6 +14,7 @@ _G.Visible_Check = false
 _G.Aimbot_AimPart = "Head"
 _G.Aimbot_TeamCheck = false
 _G.Aimbot_Draw_FOV = false
+_G.Smoothing = 0
 _G.Aimbot_FOV_Radius = 100
 _G.Aimbot_FOV_Color = Color3.fromRGB(255,255,255)
 
@@ -93,12 +95,12 @@ dwRunService.RenderStepped:Connect(function()
         closest_char:FindFirstChild("HumanoidRootPart") and
         closest_char:FindFirstChild("Humanoid") and
         closest_char:FindFirstChild("Humanoid").Health > 0 then
-
-        	if _G.Visible_Check and inlos(closest_char[_G.Aimbot_AimPart].Position, closest_char) or not _G.Visible_Check then
-        	  	if table.find(whitelisted, targ.Name) == nil then
-            		cam.CFrame = CFrame.new(cam.CFrame.Position, closest_char[_G.Aimbot_AimPart].Position)
+            if _G.Visible_Check and inlos(closest_char[_G.Aimbot_AimPart].Position, closest_char) or not _G.Visible_Check then
+        	if table.find(whitelisted, targ.Name) == nil then
+		    TweenService:Create(Camera, TweenInfo.new(_G.Smoothing / 5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(cam.CFrame.Position, closest_char[_G.Aimbot_AimPart].Position)}):Play()
+            	    --cam.CFrame = CFrame.new(cam.CFrame.Position, closest_char[_G.Aimbot_AimPart].Position)
               	end
-        	end
+            end
         end
     end
 end)
