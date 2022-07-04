@@ -11,7 +11,7 @@ _G.Visible_Check = false
 _G.Aimbot_TeamCheck = false
 _G.Aimbot_AimPart = "Head"
 
-_G.CircleSides = 24
+_G.CircleSides = 32
 _G.CircleColor = Color3.fromRGB(255, 255, 255)
 _G.CircleRadius = 100
 _G.CircleVisible = false
