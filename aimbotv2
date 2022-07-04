@@ -1,0 +1,104 @@
+local cam = workspace.CurrentCamera
+local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local mouse = plr:GetMouse()
+local dwRunService = game:GetService("RunService")
+local dwUIS = game:GetService("UserInputService")
+
+local whitelisted = {}
+
+_G.Aimbot = false
+_G.Aiming = false
+_G.Visible_Check = false
+_G.Aimbot_AimPart = "Head"
+_G.Aimbot_TeamCheck = false
+_G.Aimbot_Draw_FOV = false
+_G.Aimbot_FOV_Radius = 100
+_G.Aimbot_FOV_Color = Color3.fromRGB(255,255,255)
+
+dwUIS.InputBegan:Connect(function(i)
+if _G.Aimbot_Key != "MouseButton2" then return end
+    if i.UserInputType == Enum.UserInputType.MouseButton2 then
+        _G.Aiming = true
+    end
+end)
+
+dwUIS.InputEnded:Connect(function(i)
+if _G.Aimbot_Key != "MouseButton2" then return end
+    if i.UserInputType == Enum.UserInputType.MouseButton2 then
+        _G.Aiming = false
+    end
+end)
+
+dwUIS.InputBegan:Connect(function(i)
+if _G.Aimbot_Key == "MouseButton2" then return end
+    if i.KeyCode == Enum.KeyCode[_G.Aimbot_Key] then
+        _G.Aiming = true
+    end
+end)
+
+dwUIS.InputEnded:Connect(function(i)
+if _G.Aimbot_Key == "MouseButton2" then return end
+    if i.KeyCode == Enum.KeyCode[_G.Aimbot_Key] then
+        _G.Aiming = false
+    end
+end)
+
+local fovcircle = Drawing.new("Circle")
+
+local function inlos(p, ...)
+   return #cam:GetPartsObscuringTarget({p}, {cam, plr.Character, ...}) == 0
+end
+
+dwRunService.RenderStepped:Connect(function()
+    local dist = math.huge
+    local closest_char = nil
+
+	fovcircle.Visible = _G.Aimbot_Draw_FOV
+	fovcircle.Radius = _G.Aimbot_FOV_Radius
+	fovcircle.Color = _G.Aimbot_FOV_Color
+	fovcircle.Thickness = 2
+	fovcircle.Filled = false
+	fovcircle.Transparency = 1
+	fovcircle.Position = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / 2)
+
+    if _G.Aiming and _G.Aimbot then
+        for i,v in next, plrs:GetChildren() do 
+            if v ~= plr and
+            v.Character and
+            v.Character:FindFirstChild("HumanoidRootPart") and
+            v.Character:FindFirstChild("Humanoid") and
+            v.Character:FindFirstChild("Humanoid").Health > 0 then
+
+                if _G.Aimbot_TeamCheck and
+                v.Team ~= plr.Team or
+                not _G.Aimbot_TeamCheck then
+
+                    local char = v.Character
+                    local char_part_pos, is_onscreen = cam:WorldToViewportPoint(char[_G.Aimbot_AimPart].Position)
+
+                    if is_onscreen then
+                        local mag = (Vector2.new(mouse.X, mouse.Y) - Vector2.new(char_part_pos.X, char_part_pos.Y)).Magnitude
+
+                        if mag < dist and mag < _G.Aimbot_FOV_Radius then
+                            dist = mag
+                            closest_char = char
+                            targ = v
+                        end
+                    end
+                end
+            end
+        end
+        if closest_char ~= nil and
+        closest_char:FindFirstChild("HumanoidRootPart") and
+        closest_char:FindFirstChild("Humanoid") and
+        closest_char:FindFirstChild("Humanoid").Health > 0 then
+
+        	if _G.Visible_Check and inlos(closest_char[_G.Aimbot_AimPart].Position, closest_char) or not _G.Visible_Check then
+        	  	if table.find(whitelisted, targ.Name) == nil then
+            		cam.CFrame = CFrame.new(cam.CFrame.Position, closest_char[_G.Aimbot_AimPart].Position)
+              	end
+        	end
+        end
+    end
+end)
