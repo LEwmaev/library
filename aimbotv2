@@ -6,7 +6,7 @@ local TweenService = game:GetService("TweenService")
 local dwRunService = game:GetService("RunService")
 local dwUIS = game:GetService("UserInputService")
 
-local whitelisted = {}
+_G.whitelisted = {}
 
 _G.Aimbot = false
 _G.Aiming = false
