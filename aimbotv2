@@ -97,7 +97,7 @@ dwRunService.RenderStepped:Connect(function()
         closest_char:FindFirstChild("Humanoid") and
         closest_char:FindFirstChild("Humanoid").Health > 0 then
             if _G.Visible_Check and inlos(closest_char[_G.Aimbot_AimPart].Position, closest_char) or not _G.Visible_Check then
-        	if table.find(whitelisted, targ.Name) == nil then
+        	if table.find(_G.whitelisted, targ.Name) == nil then
             	    cam.CFrame = CFrame.new(cam.CFrame.Position, closest_char[_G.Aimbot_AimPart].Position)
               	end
             end
